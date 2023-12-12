@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+FOO="${FOO:-unset}"
+
+cat <<EOF
+This file represents source code that needs to be compiled.
+The value of FOO is $FOO
+EOF
+

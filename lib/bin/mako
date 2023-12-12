@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+# This wrapper (or similar) is only necessary if using Makefiles by a
+# non-standard name, in this case, "Mako.mk"
+
+exec -a $0 make --warn-undefined-variables -f Mako.mk "$@"
+

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{
+  echo --bringing up deployment--
+  echo
+  echo ==client==
+  cat $TESTBED_ROOT/client/genfiles/client_bundle
+  echo ====
+  echo
+  echo ==server==
+  cat $TESTBED_ROOT/server/genfiles/server_bin
+  echo ====
+} | tee genfiles/bring_it_up_log
+

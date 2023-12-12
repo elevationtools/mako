@@ -1,0 +1,4 @@
+service Foo {
+  rpc Bar(Stuff) returns (Stuff);
+}
+message Stuff { }

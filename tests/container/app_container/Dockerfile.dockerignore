@@ -1,0 +1,8 @@
+
+*
+
+!lib/
+!tests/container/
+
+**/genfiles
+

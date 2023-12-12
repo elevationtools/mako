@@ -1,0 +1,20 @@
+
+mako_setup_repo_environment() {
+  prev_REPO_ROOT=
+  export REPO_ROOT="$PWD"
+  while ! test -e "$REPO_ROOT/WORKSPACE"; do
+    prev_REPO_ROOT="$REPO_ROOT"
+    export REPO_ROOT="$(dirname "$REPO_ROOT")"
+    test "$prev_REPO_ROOT" = "$REPO_ROOT" && {
+      echo "ERROR: Couldn't find file 'WORKSPACE'."
+      echo "  activate-sh must be run from within the repo root directory"
+      return 1
+    } >&2
+  done
+
+  export MAKO_ROOT="$REPO_ROOT/lib"
+  export PATH="$MAKO_ROOT/bin:$PATH"
+}
+
+mako_setup_repo_environment
+
