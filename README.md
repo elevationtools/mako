@@ -29,23 +29,15 @@ repo_root
 
 With the following dependency graph between each of these directories:
 ```mermaid
-graph TD;
-    deployment/local_dev-->golang_backend;
-    deployment/local_dev-->nextjs_frontend;
-    golang_backend-->api_protobuf;
-    nextjs_frontend-->api_protobuf;
-```
-
-```
-                       -----------
-                 ----->| golang  |------
- -------------- /      | backend |      \        -------------
- | local_dev  |/       -----------       ------> |   api     |
- | deployment |\                           ----> |  protobuf |
- -------------- \       ------------      /      -------------
-                 ------>| nextjs   |------
-                        | frontend |
-                        ------------
+flowchart LR;
+  A(deployment local_dev)
+  B(golang backend)
+  C(nextjs frontend)
+  D(api protobuf)
+  A-->B;
+  A-->C;
+  B-->D;
+  C-->D;
 ```
 
 You define independent Makefiles in each of these directories, each `include`ing
