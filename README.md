@@ -1,6 +1,8 @@
 
 # Mako make-based mono-repo and meta-repo tool
 
+![mako shark](https://upload.wikimedia.org/wikipedia/commons/6/69/Shortfin_mako_shark_%28Duane_Raver%29.png)
+
 Mako is a gnu make library for use in mono-repos (or meta-repos) containing many
 components with cross component dependencies.
 
