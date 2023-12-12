@@ -1,10 +1,10 @@
 
-# Mako make-based mono-repo and meta-repo tool
+# Mako (make-based mono-repo and meta-repo tool)
 
 ![mako shark](https://upload.wikimedia.org/wikipedia/commons/6/69/Shortfin_mako_shark_%28Duane_Raver%29.png)
 
 Mako is a gnu make library for use in mono-repos (or meta-repos) containing many
-components with cross component dependencies.
+components with cross **component** dependencies.
 
 > Term: **Component**
 >
@@ -16,8 +16,6 @@ components with cross component dependencies.
 
 ## Example Usage Scenario
 
-First, an example usage scenario.
-
 Imagine a repository with the following structure:
 ```
 repo_root
@@ -26,10 +24,18 @@ repo_root
 ├── deployments
 │   └── local_dev
 ├── golang_backend
-└── nodejs_frontend
+└── nextjs_frontend
 ```
 
 With the following dependency graph between each of these directories:
+```mermaid
+graph TD;
+    deployment/local_dev-->golang_backend;
+    deployment/local_dev-->nextjs_frontend;
+    golang_backend-->api_protobuf;
+    nextjs_frontend-->api_protobuf;
+```
+
 ```
                        -----------
                  ----->| golang  |------
@@ -37,7 +43,7 @@ With the following dependency graph between each of these directories:
  | local_dev  |/       -----------       ------> |   api     |
  | deployment |\                           ----> |  protobuf |
  -------------- \       ------------      /      -------------
-                 ------>| nodejs   |------
+                 ------>| nextjs   |------
                         | frontend |
                         ------------
 ```
