@@ -1,16 +1,19 @@
 
-# Mako (make-based mono-repo and meta-repo tool)
+# Mako
+
+***A make-based mono-repo and meta-repo tool***
 
 ![mako shark](https://upload.wikimedia.org/wikipedia/commons/6/69/Shortfin_mako_shark_%28Duane_Raver%29.png)
 
-Mako is a gnu make library for use in mono-repos (or meta-repos) containing many
-components with cross **component** dependencies.
+Mako is a small but handy gnu make library for use in mono-repos (or meta-repos)
+containing multiple **components** with cross component dependencies.
 
-> Term: **Component**
+> Terminology: **Component**
 >
-> A directory containing a Makefile which includes `$(MAKO_ROOT)/component.mk`
+> A directory containing a Makefile which includes `$(MAKO_ROOT)/component.mk` and
+> implements the interface it defines.
 >
-> Usually a sub-project of a monorepo such as the frontend, the backend, a
+> A component is usually a sub-project of a monorepo such as the frontend, the backend, a
 > shared library, etc.
 
 
@@ -40,14 +43,22 @@ flowchart LR;
   C-->D;
 ```
 
-You define independent Makefiles in each of these directories, each `include`ing
-and using `$(MAKO_ROOT)/component.mk`.  These directories are then said to be
-**components**.
+Each of these directories are **components** as defined above.
 
 The component Makefiles define targets and prereqs as normal, but also define
 cross-component dependencies, like the `golang backend` depending on the `api
 protobuf`.  Transitive dependencies are not included, they are automatically
-determined.
+determined.  Here's an example of how dependencies are defined in a Makefile:
+
+`deployments/local_dev/Makefile`:
+```
+...
+define DEPS
+  $(REPO_ROOT)/golang_backend
+  $(REPO_ROOT)/nextjs_frontend
+endef
+...
+```
 
 You can then run `make -j 4 -C deployments/local_dev`.  This will make
 everything in a parallel manner, and the *"parallel diamond dependency problem"*
@@ -88,8 +99,8 @@ The unit tests in [./tests](./tests) serve as concrete examples.
 ### Solve problems with sub-make usage:
 
 Within a single `make` process, the following problems are inherently solved,
-but use of sub-make requires some extra work (this library) to solve these
-problems.
+but use of sub-make requires some extra work to solve them (hence the need for
+this library).
 
 - Allow defining dependencies across components (across Makefiles) with
   automatic transitive dependency resolution.
@@ -128,6 +139,31 @@ To run the unit tests, just run `make` in the repo root.
 ## Development
 
 When working on this library, it is handy to source
-[./activate-sh](./activate-sh) into your shell (just like `Makefile` does before
-running the unit tests)
+[`activate-sh`](./activate-sh) into your shell (just like root [`Makefile`](./Makefile)
+does before running the unit tests)
 
+## Comparison with other build tools
+
+> TODO: work on this section
+
+### bazel, pants, buck2
+
+These are designed for deterministic building of code in a hermetic environment.
+They disallow or discourage non-hermetic and non-deterministic tasks.
+These tools complement `mako` which can invoke them, but `mako` also needs to support
+these non-hermetic and/or non-determistic cases.
+
+### Earthly
+
+The closest thing I've found so far to what this library does.
+
+The main disadvantages of earthly come from the fact that it forces every build step to use docker.
+
+Disadvantages:
+- Can't build directly on the host.
+- Heavy weight for small tasks.
+- Forces docker-in-docker.
+- Less natural to interact with host system.  `mako` needs to support tasks
+  that setup the host system.
+
+Earthly's DSL is certainly slicker than old `make` though.
