@@ -1,5 +1,5 @@
 
-TESTS := diamond check_only container
+TESTS := diamond check_only container deps_download
 
 .PHONY: test
 test: $(foreach x, $(TESTS), $(x)-RUN_TEST)

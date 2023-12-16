@@ -1,5 +1,5 @@
 
-include $(REPO_ROOT)/examples/deps_pattern/deps/dep.mk
+include $(MAKO_ROOT)/dep.mk
 
 ifeq "$(MAKO_STAGE)" "main"
 

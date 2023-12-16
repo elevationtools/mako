@@ -130,6 +130,21 @@ this library).
     especially when running on CI systems that may also already be running in a
     container themselves.
 
+## Deps Downloading
+
+The [`tests/deps_download`](./tests/deps_download) directory demonstrates a
+pattern for using Mako that provides the following benefits:
+
+- A project will always use the same version of dependencies.
+- Automates setup of developer workstations, reducing onboarding effort.
+- Uses a unified approach for production building, CI/CD, and workstations.
+- Allows downloading only the dependencies needed for building any given
+	subcomponent of a project.  This is particularly beneficial when building
+	Docker images to keep build times down and images smaller.
+
+The [`lib/dep.mk`](./lib/dep.mk) file fasciliates this pattern (but a custom
+approach may be preferable).
+
 
 ## Unit Tests
 
@@ -167,3 +182,4 @@ Disadvantages:
   that setup the host system.
 
 Earthly's DSL is certainly slicker than old `make` though.
+
