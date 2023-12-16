@@ -1,3 +1,5 @@
+# TODO(naming): Think of a better name than "dep" because the term is already
+# used in Mako.  Perhaps "external dep", "external tool", "download", etc.
 #
 # Callers must implement a targets named $(shell uname -s)-$(shell uname -m) for
 # all desired platforms. For example:
