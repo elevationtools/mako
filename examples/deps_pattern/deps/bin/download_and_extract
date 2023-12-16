@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+file_type="${1:?}"
+url="${2:?}"
+
+case "$file_type" in
+  tar.gz) : ;;
+  *)
+    echo "Unknown file type: $file_type" >&2
+    exit 1
+    ;;
+esac
+
+mkdir -p genfiles
+cd genfiles
+
+curl -L -o "download.${file_type}" "${url}"
+
+case "$file_type" in
+  tar.gz)
+    tar xzvf download.${file_type}
+    rm download.${file_type}
+esac
+
