@@ -19,7 +19,7 @@ ifeq "$(MAKO_STAGE)" "main"
 OS_ARCH := $(shell uname -s)-$(shell uname -m)
 
 DEFAULT_TARGETS := genfiles/installed
-DEFAULT_PREREQS := Makefile
+DEFAULT_PREREQS := $(MAKEFILE_LIST)
 genfiles/installed: 
 	$(MAKE) --no-print-directory '$(OS_ARCH)'
 	mkdir -p $(dir $@)
