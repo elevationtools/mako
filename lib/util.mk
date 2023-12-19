@@ -22,7 +22,7 @@ always: ;
 
 MAKOI_EVENTS := genfiles/mako
 
-touch_target := mkdir -p $(dir $@); touch $@
+touch_target = mkdir -p $(dir $@); touch $@
 
 ifeq "$(MAKO_STAGE)" "main"
 
