@@ -10,8 +10,8 @@ containing multiple **components** with cross component dependencies.
 
 > Terminology: **Component**
 >
-> A directory containing a Makefile which includes `$(MAKO_ROOT)/component.mk` and
-> implements the interface it defines.
+> A component directory containing a Makefile which includes
+> `$(MAKO_ROOT)/component.mk` and implements the interface it defines.
 >
 > A component is usually a sub-project of a monorepo such as the frontend, the backend, a
 > shared library, etc.
@@ -19,7 +19,7 @@ containing multiple **components** with cross component dependencies.
 
 ## Example Usage Scenario
 
-Imagine a repository with the following structure:
+First, imagine a repository with the following structure:
 ```
 repo_root
 ├── .git
