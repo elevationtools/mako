@@ -34,7 +34,9 @@ define mako_define_target_impl
 .PHONY: $(1)
 $(1): $(2)
 $(2): $(MAKOI_EVENTS)/check/$(1)
-$(MAKOI_EVENTS)/check/$(1): $(3) $(MAKOI_EVENTS)/check/makoi_dep_prereqs
+$(MAKOI_EVENTS)/check/$(1): $(3) \
+		$(call expand_deps_to_prereqs, $(DEPS)) \
+		$(call expand_deps_to_prereqs, $(CHECK_ONLY_DEPS))
 	touch $$@
 	@echo "mako target '$(1)' needs updating due to: $$?"
 endef

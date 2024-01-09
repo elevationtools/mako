@@ -9,10 +9,7 @@ remove_first = $(wordlist 2, $(words $(1)), $(1))
 targets_from_depline = \
 		$(strip $(call remove_first, $(call unescape_depline, $(1))))
 targets_from_depline_expanded = \
-	$(or $(strip $(call targets_from_depline,$(1))),default)
-
-check_list_from_depline = \
-		$(foreach x, $(sort default, $(call targets_from_depline,$(1)), $(x)-makoi_check_target)
+	$(or $(strip $(call targets_from_depline, $(1))), default)
 
 expand_deps_to_prereqs = $(sort $(strip \
 	$(foreach depline, $(call escape_deps,$(1)), \
