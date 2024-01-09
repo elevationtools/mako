@@ -15,6 +15,9 @@ $(MAKOI_EVENTS)/check/makoi_dep_prereqs: \
 
 $(call mako_define_target, default, $(DEFAULT_TARGETS), $(DEFAULT_PREREQS))
 
+.PHONY: deps
+deps: default-deps
+
 endif # main
 
 

@@ -5,14 +5,15 @@ include $(MAKO_ROOT)/internal_util.mk
 #### Public Interface ####
 
 # All DEPS will have "make" called on them before entering the "main" stage.
-# However, if "make check" is called on this component, then only "make check"
-# will be called DEPS.
 DEPS ?=
 
 BASIC_DEPS ?=
 
-# All CHECK_ONLY_DEPS will have "make check" called on them before entering the
-# "main" stage (even if "make" was called on this component).
+# All CHECK_ONLY_DEPS will have "make $(MAKOI_EVENTS)/check/${target_name}"
+# called on them before entering the "main" stage (which propagates to
+# transitive DEPS and CHECK_ONLY deps). This means that CHECK_ONLY_DEPS and
+# transitive CHECK_ONLY_DEPS and DEPS behind them won't be built, rather they
+# will just be checked if they need to be built.
 CHECK_ONLY_DEPS ?=
 
 # clean_genfiles is used by callers in some weird cases.
@@ -37,11 +38,13 @@ ifndef MAKO_STAGE
 
 # This is the main build rule. It forwards to the rule of the same name but
 # with the flock held.  Both checkable and basic targets flow through this.
-%: $(MAKOI_EVENTS)/built $(MAKOI_EVENTS)/check \
-		$(foreach x, $(DEPS_escaped), $(x)-makoi_build_depline) \
-		$(foreach x, $(BASIC_DEPS_escaped), $(x)-makoi_build_basic_depline) \
-		$(foreach x, $(CHECK_ONLY_DEPS_escaped), $(x)-makoi_check_depline)
+%: $(MAKOI_EVENTS)/built $(MAKOI_EVENTS)/check %-deps
 	MAKO_STAGE=main flock ./ $(MAKE) --no-print-directory $@
+
+%-deps: always \
+				$(foreach x, $(DEPS_escaped), $(x)-makoi_build_depline) \
+				$(foreach x, $(BASIC_DEPS_escaped), $(x)-makoi_build_basic_depline)
+				$(foreach x, $(CHECK_ONLY_DEPS_escaped), $(x)-makoi_check_depline)
 
 # The stem is a depline.
 %-makoi_build_depline:: always
