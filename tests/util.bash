@@ -37,7 +37,8 @@ function expect() {
 function run() {
   ${DEBUG:-false} && { eval "$@"; } || {
     eval "$@" &> /dev/null || {
-      echo FAILURE, running again to get error messages.
+      echo "FAILURE: $@"
+      echo "  Running again to get error messages."
       eval "$@"
       return $?
     }

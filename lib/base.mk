@@ -5,14 +5,19 @@ include $(MAKO_ROOT)/internal_util.mk
 #### Public Interface ####
 
 # All DEPS will have "make" called on them before entering the "main" stage.
-# However, if "make check" is called on this component, then only "make check"
-# will be called DEPS.
+# Also, when "make clean_deps" is called, these have "clean" and "clean_deps"
+# called on them.
 DEPS ?=
 
+# Same as DEPS except "make clean_deps" isn't called on them, only "make clean".
+# Also, they don't support transitive dependence.
 BASIC_DEPS ?=
 
-# All CHECK_ONLY_DEPS will have "make check" called on them before entering the
-# "main" stage (even if "make" was called on this component).
+# All CHECK_ONLY_DEPS will have "make $(MAKOI_EVENTS)/check/${target_name}"
+# called on them before entering the "main" stage (which propagates to
+# transitive DEPS and CHECK_ONLY deps). This means that CHECK_ONLY_DEPS and
+# transitive CHECK_ONLY_DEPS and DEPS behind them won't be built, rather they
+# will just be checked if they need to be built.
 CHECK_ONLY_DEPS ?=
 
 # clean_genfiles is used by callers in some weird cases.
@@ -37,11 +42,13 @@ ifndef MAKO_STAGE
 
 # This is the main build rule. It forwards to the rule of the same name but
 # with the flock held.  Both checkable and basic targets flow through this.
-%: $(MAKOI_EVENTS)/built $(MAKOI_EVENTS)/check \
-		$(foreach x, $(DEPS_escaped), $(x)-makoi_build_depline) \
-		$(foreach x, $(BASIC_DEPS_escaped), $(x)-makoi_build_basic_depline) \
-		$(foreach x, $(CHECK_ONLY_DEPS_escaped), $(x)-makoi_check_depline)
+%: deps $(MAKOI_EVENTS)/check
 	MAKO_STAGE=main flock ./ $(MAKE) --no-print-directory $@
+
+.PHONY: deps
+deps: $(foreach x, $(DEPS_escaped), $(x)-makoi_build_depline) \
+			$(foreach x, $(BASIC_DEPS_escaped), $(x)-makoi_build_basic_depline) \
+			$(foreach x, $(CHECK_ONLY_DEPS_escaped), $(x)-makoi_check_depline)
 
 # The stem is a depline.
 %-makoi_build_depline:: always
@@ -81,7 +88,7 @@ clean_deps: \
 %-clean_basic_dep:: always
 	make -C $(call dir_from_depline,$*) clean
 
-$(MAKOI_EVENTS)/built $(MAKOI_EVENTS)/check:
+$(MAKOI_EVENTS)/check:
 	mkdir -p $@
 
 endif # MAKO_STAGE
