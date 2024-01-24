@@ -1,5 +1,8 @@
 
-include $(MAKO_ROOT)/util.mk
+ifndef MAKO_INTERNAL_UTIL_MK
+MAKO_INTERNAL_UTIL_MK=x
+
+include $(MAKO_ROOT)/common.mk
 
 escape_deps = $(subst |,$(space),$(subst $(space),+,$(subst |$(space),|,$(strip $(subst $(newline),|,$(1))))))
 
@@ -19,4 +22,6 @@ expand_deps_to_prereqs = $(sort $(strip \
 
 # Avoid the problematic auto-remake of this file.
 $(MAKO_ROOT)/internal_util.mk: ;
+
+endif # MAKO_INTERNAL_UTIL_MK
 
