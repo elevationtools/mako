@@ -33,7 +33,7 @@ genfiles/installed:
 
 .PHONY: $(OS_ARCH)
 .PHONY: smoketest
-smoketest: genfiles/installed
+smoketest:
 
 endif
 
